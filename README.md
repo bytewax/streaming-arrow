@@ -1,5 +1,8 @@
 # Streaming Arrow
 
+<img width="868" alt="streaming_arrow" src="https://github.com/bytewax/streaming-arrow/assets/6073079/80cb58fd-56f3-4d51-9dd8-7fae2e86d0ac">
+
+
 ## Background
 
 A complete streaming architecture has never been known for it's simplicity. And this is something I have always seen as a major detractor from more widespread adoption. It's also hard to square the problem of half my data is coming in batches and half of it is in streams. You will suffer from the lowest common denominator problem when you try to bring products to market. The lowest common denominator problem in data is that you will only be able to provide intelligence at the speed or freshness of your slowest data. This might not be an issue for you, but it could be devastating in many instances. Most new features are powered by data, whether through machine intelligence like AI, or as an interactive analytical product. Ordering a ride on Uber, looking at content on TikTok or checking out while purchasing on amazon.com. All of these experiences are powered by data. More specifically, real-time generated data. When you think of the leading companies/products in many industries today, the speed and freshness of data in these products are key determinants of their success. A key part of that is that the data is used in an algorithm or model to create a better experience or drive more engagement.
