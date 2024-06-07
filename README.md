@@ -30,7 +30,7 @@ Let's get streaming!
 
 For this example, we are going to borrow from a Bytewax community user who made a solution for the energy company he works for. First, we will use Bytewax to "gather" events from disparate sources and transform them into micro-batches using the Arrow format. We will then write these Arrow tables to a message broker like Redpanda to provide us with some durability, replayability, and any fan-out workloads downstream. Then downstream we can use Bytewax to run real-time alerting or analysis we need and also create another workload that will load our data to a sink like Clickhouse for additional reporting/querying. 
 
-What's great is that you could sub in literally any Kafka API-compatible streaming platform and substitute any Sink that is arrow-compatible downstream. 
+What's great is that you could sub in literally any Kafka API-compatible streaming platform and substitute any Sink that is arrow-compatible downstream.
 
 I don't have many sensors at my disposal, so we can use our own computers :smile:.
 
