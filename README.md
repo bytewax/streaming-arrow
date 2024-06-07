@@ -2,7 +2,6 @@
 
 <img width="895" alt="streaming_arrow" src="https://github.com/bytewax/streaming-arrow/assets/6073079/227c9577-4467-41c5-9efa-8ba27b1b5e59">
 
-
 ## Background
 
 A complete streaming architecture has never been known for its simplicity. And this is something I have always seen as a major detractor from more widespread adoption. It's also hard to square the problem of half my data coming in batches and half of it being in streams. You will suffer from the lowest common denominator problem when you try to bring products to market. The lowest common denominator problem in data is that you will only be able to provide intelligence at the speed or freshness of your slowest data. This might not be an issue for you, but it could be devastating in many instances. Most new features are powered by data, whether through machine intelligence like AI or as an interactive analytical product. Ordering a ride on Uber, looking at content on TikTok, or checking out while purchasing on amazon.com. All of these experiences are powered by data. More specifically, real-time generated data. When you think of the leading companies/products in many industries today, the speed and freshness of data in these products are key determinants of their success. A key part of that is that the data is used in an algorithm or model to create a better experience or drive more engagement.
@@ -37,21 +36,17 @@ I don't have many sensors at my disposal, so we can use our own computers :smile
 
 ```python
 import pyarrow as pa
-from bytewax.connectors.kafka import KafkaSource, KafkaSink, KafkaSinkMessage, operators as kop
+from bytewax.connectors.kafka import KafkaSinkMessage, operators as kop
 import bytewax.operators as op
-from bytewax.connectors.stdio import StdOutSink
 from bytewax.dataflow import Dataflow
 from bytewax.testing import TestingSource
-from datetime import datetime, timedelta
+from datetime import datetime
 from time import perf_counter
 import psutil
 
 
-BROKERS = ['127.0.0.1:9092']
-
-TOPIC = 'bytewax_arrow'
-# rpk topic delete bytewax_arrow
-# rpk topic create bytewax_arrow
+BROKERS = ["localhost:19092"]
+TOPIC = ["arrow_tables"]
 
 run_start = perf_counter()
 
@@ -104,21 +99,17 @@ table_gen = (sample_batch_wide_table(BATCH_SIZE) for i in range(N_BATCHES))
 
 
 flow = Dataflow("arrow_producer")
+
+# this is only an example. should use window or collect downstream
 tables = op.input("tables", flow, TestingSource(table_gen))
+
 buffers = op.map("string_output", tables, table_to_compressed_buffer)
 messages = op.map("map", buffers, lambda x: KafkaSinkMessage(key=None, value=x))
-message_stat_strings = op.map("message_stat_strings", messages, lambda x: f"-> {len(x.value)} bytes")
-op.output("console", message_stat_strings, StdOutSink())
-kop.output("redpanda_out", messages, brokers=BROKERS, topic=TOPIC)
-
-# rpk topic describe -a bytewax_arrow
-# rpk topic describe-storage bytewax_arrow
-
-# python -m bytewax.run arrow_producer.py
+op.inspect("message_stat_strings", messages, lambda x: f"-> {len(x.value)} bytes")
+kop.output("kafka_out", messages, brokers=BROKERS, topic=TOPIC)
 ```
 
 You will notice that we are using Apache Arrow. But wait, why arrow? Isn't this for in-memory tables for columnar data. Well. Yes. But it is also really efficient when we want to avoid copying and serializing the data.
 
 Once our data is in an arrow table, we can use it everywhere and with everything!
-
 

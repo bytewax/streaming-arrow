@@ -1,0 +1,4 @@
+bytewax==0.20.1
+adbc_driver_manager==1.0.0
+adbc_driver_sqlite==1.0.0
+pyarrow==16.1.0
